@@ -1,13 +1,18 @@
 package com.exercise.carparking;
 
+import io.netty.handler.logging.LogLevel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.reactive.ClientHttpConnector;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
+import reactor.netty.transport.logging.AdvancedByteBufFormat;
 
 @Slf4j
 @Configuration
@@ -25,12 +30,16 @@ public class WebClientConfig {
                 .codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(size))
                 .build();
 
+        HttpClient httpClient = HttpClient.create()
+                .wiretap(this.getClass().getCanonicalName(), LogLevel.DEBUG, AdvancedByteBufFormat.TEXTUAL);
+        ClientHttpConnector conn = new ReactorClientHttpConnector(httpClient);
+
         return WebClient.builder()
                 .exchangeStrategies(strategies)
-                .filters(exchangeFilterFunctions -> {
-                    exchangeFilterFunctions.add(logRequest());
-                    exchangeFilterFunctions.add(logResponse());
-                });
+                .clientConnector(conn)
+                .filters(exchangeFilterFunctions ->
+                    exchangeFilterFunctions.add(logRequest())
+                );
     }
 
     @Bean
@@ -49,17 +58,12 @@ public class WebClientConfig {
 
     ExchangeFilterFunction logRequest() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
-            StringBuilder sb = new StringBuilder("Request: \n");
-            log.debug(sb.toString());
-            return Mono.just(clientRequest);
-        });
-    }
+            log.debug(String.format("Request: %s %s", clientRequest.method(), clientRequest.url()));
+            clientRequest
+                    .headers()
+                    .forEach((name, values) -> values.forEach(value -> log.debug(String.format("%s: %s", name, value))));
 
-    ExchangeFilterFunction logResponse() {
-        return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
-            StringBuilder sb = new StringBuilder("Response: \n");
-            log.debug(sb.toString());
-            return Mono.just(clientResponse);
+            return Mono.just(clientRequest);
         });
     }
 }
