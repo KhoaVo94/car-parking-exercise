@@ -10,6 +10,6 @@ public class Pageable {
     Integer pageSize;
 
     public Integer getOffset() {
-        return pageNumber * pageSize;
+        return (pageNumber - 1) * pageSize;
     }
 }
