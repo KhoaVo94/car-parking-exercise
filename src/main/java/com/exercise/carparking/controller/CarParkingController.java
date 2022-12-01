@@ -31,22 +31,12 @@ public class CarParkingController {
 
     @RequestMapping(value = "/information/update", method = RequestMethod.PATCH)
     public Mono<CarParkInformationResponse> updateInformation() {
-        return carParkInformationService.getLatestData()
-                .map(response -> {
-                    CarParkInformations carParkInformations = response.asCarParkInformations();
-                    carParkInformationService.update(carParkInformations);
-                    return response;
-                });
+        return carParkInformationService.updateWithLatestData();
     }
 
     @RequestMapping(value = "/availability/update", method = RequestMethod.PATCH)
     public Mono<CarParkAvailabilityItems> updateAvailability() {
-        return carParkAvailabilityService.getLatestData()
-                .map(response -> {
-                    CarParkAvailabilities carParkAvailabilities = response.asCarParkAvailabilities();
-                    carParkAvailabilityService.update(carParkAvailabilities);
-                    return response;
-                });
+        return carParkAvailabilityService.updateWithLatestData();
     }
 
     @RequestMapping(value = "/nearest")

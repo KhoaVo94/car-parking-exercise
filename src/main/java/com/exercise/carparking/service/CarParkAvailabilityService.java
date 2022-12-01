@@ -42,15 +42,25 @@ public class CarParkAvailabilityService {
         return carPArkAvailabilityQueryRepository.findByCoordinate(latitude, longtitude, pageable);
     }
 
-    public Mono<CarParkAvailabilityItems> getLatestData() {
+    public Mono<CarParkAvailabilityItems> updateWithLatestData() {
         return carParkAvailabilityWebClient.get()
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(CarParkAvailabilityItems.class);
+                .bodyToMono(CarParkAvailabilityItems.class)
+                .map(response -> {
+                    CarParkAvailabilities carParkAvailabilities = response.asCarParkAvailabilities();
+                    update(carParkAvailabilities);
+                    return response;
+                });
     }
 
     @Transactional
     public void update(CarParkAvailabilities carParkAvailabilities) {
         carParkAvailabilityCommandRepository.register(carParkAvailabilities);
+    }
+
+    @Transactional
+    public void deleteIfNotExist() {
+        carParkAvailabilityCommandRepository.deleteIfParkNotExist();
     }
 }

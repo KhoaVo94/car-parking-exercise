@@ -23,21 +23,12 @@ public class ScheduledTask {
 
     @Scheduled(cron = "10 */1 * * * *")
     public void updateCarParkingAvailability() {
-        carParkAvailabilityService.getLatestData()
-                .map(response -> {
-                    CarParkAvailabilities carParkAvailabilities = response.asCarParkAvailabilities();
-                    carParkAvailabilityService.update(carParkAvailabilities);
-                    return response;
-                }).block();
+        carParkAvailabilityService.updateWithLatestData().block();
+        carParkAvailabilityService.deleteIfNotExist();
     }
 
     @Scheduled(cron = "0 0 4 */1 * *")
     public void updateCarParkingInformation() {
-        carParkInformationService.getLatestData()
-                .map(response -> {
-                    CarParkInformations carParkInformations = response.asCarParkInformations();
-                    carParkInformationService.update(carParkInformations);
-                    return response;
-                }).block();
+        carParkInformationService.updateWithLatestData().block();
     }
 }

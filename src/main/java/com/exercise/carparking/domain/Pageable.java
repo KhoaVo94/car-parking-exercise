@@ -1,9 +1,9 @@
 package com.exercise.carparking.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
 public class Pageable {
     Integer pageNumber;
@@ -11,5 +11,17 @@ public class Pageable {
 
     public Integer getOffset() {
         return (pageNumber - 1) * pageSize;
+    }
+
+    public Integer getCurrentItemSize() {
+        return getOffset() + pageSize;
+    }
+
+    public void increasePageNumber(int increament) {
+        pageNumber = pageNumber + increament;
+    }
+
+    public void increasePageSize(int increament) {
+        pageSize = pageSize + increament;
     }
 }

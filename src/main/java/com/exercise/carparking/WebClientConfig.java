@@ -19,30 +19,31 @@ public class WebClientConfig {
     String availabilityUrl;
 
     @Bean
-    WebClient carParkInformationWebClient() {
-        return WebClient.builder()
-                .baseUrl(infoUrl)
-                .filters(exchangeFilterFunctions -> {
-                    exchangeFilterFunctions.add(logRequest());
-                    exchangeFilterFunctions.add(logResponse());
-                })
-                .build();
-    }
-
-    @Bean
-    WebClient carParkAvailabilityWebClient() {
+    WebClient.Builder baseWebClientBuilder() {
         final int size = 16 * 1024 * 1024;
         final ExchangeStrategies strategies = ExchangeStrategies.builder()
                 .codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(size))
                 .build();
 
         return WebClient.builder()
-                .baseUrl(availabilityUrl)
                 .exchangeStrategies(strategies)
                 .filters(exchangeFilterFunctions -> {
                     exchangeFilterFunctions.add(logRequest());
                     exchangeFilterFunctions.add(logResponse());
-                })
+                });
+    }
+
+    @Bean
+    WebClient carParkInformationWebClient(WebClient.Builder baseWebClientBuilder) {
+        return baseWebClientBuilder
+                .baseUrl(infoUrl)
+                .build();
+    }
+
+    @Bean
+    WebClient carParkAvailabilityWebClient(WebClient.Builder baseWebClientBuilder) {
+        return baseWebClientBuilder()
+                .baseUrl(availabilityUrl)
                 .build();
     }
 

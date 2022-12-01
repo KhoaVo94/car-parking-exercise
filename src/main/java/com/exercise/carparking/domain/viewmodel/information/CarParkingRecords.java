@@ -15,6 +15,9 @@ public class CarParkingRecords {
     @JsonProperty("records")
     List<CarParkInformationJson> carParkInformations;
 
+    @JsonProperty("total")
+    Integer total;
+
     public List<CarParkInformationJson> carParkInformations() {
         return Collections.unmodifiableList(carParkInformations);
     }

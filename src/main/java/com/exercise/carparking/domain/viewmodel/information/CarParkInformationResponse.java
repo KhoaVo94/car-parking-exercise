@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -19,19 +20,19 @@ public class CarParkInformationResponse {
 
     public static CarParkInformationResponse from(CarParkInformations carParkInformations) {
 
-        return new CarParkInformationResponse(
-                new CarParkingRecords(
-                        carParkInformations.values().stream()
-                                .map(carParkInformation ->
-                                        new CarParkInformationJson(
-                                                carParkInformation.getCarParkNo(),
-                                                carParkInformation.getLongitude(),
-                                                carParkInformation.getLatitude(),
-                                                carParkInformation.getAddress()
-                                        )
-                                )
-                                .collect(Collectors.toList())
+        List<CarParkInformationJson> carParkInformationJsons = carParkInformations.values().stream()
+                .map(carParkInformation ->
+                        new CarParkInformationJson(
+                                carParkInformation.getCarParkNo(),
+                                carParkInformation.getLongitude(),
+                                carParkInformation.getLatitude(),
+                                carParkInformation.getAddress()
+                        )
                 )
+                .collect(Collectors.toList());
+
+        return new CarParkInformationResponse(
+                new CarParkingRecords(carParkInformationJsons,carParkInformationJsons.size())
         );
     }
 
