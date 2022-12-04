@@ -23,6 +23,7 @@ public class CarParkAvailabilityResponse {
                                 carParkAvailability.getCarParkInformation().getAddress(),
                                 carParkAvailability.getCarParkInformation().getLatitude(),
                                 carParkAvailability.getCarParkInformation().getLongitude(),
+                                carParkAvailability.getLotType(),
                                 carParkAvailability.getTotalLots(),
                                 carParkAvailability.getAvailableLots()
                         )).collect(Collectors.toList())

@@ -27,4 +27,14 @@ public class CarParkAvailabilities {
     public boolean isEmpty() {
         return values.isEmpty();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CarParkAvailabilities carParkAvailabilities = (CarParkAvailabilities) o;
+
+        return Objects.equals(values, carParkAvailabilities.values);
+    }
 }

@@ -1,5 +1,6 @@
 package com.exercise.carparking.domain;
 
+import com.exercise.carparking.util.DataClassUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,18 +26,12 @@ public class CarParkAvailability {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CarParkAvailability carParkAvailability = (CarParkAvailability) o;
-
-        return Objects.equals(lotType, carParkAvailability.lotType)
-                && Objects.equals(carParkInformation, carParkAvailability.carParkInformation);
+        return DataClassUtil.equals(this, o);
 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(lotType, carParkInformation);
+        return DataClassUtil.hashCode(this);
     }
 }

@@ -28,6 +28,6 @@
     </insert>
 
     <delete id="clear">
-        TRUNCATE TABLE carparking.carpark_info;
+        DELETE FROM carparking.carpark_info WHERE 1=1;
     </delete>
 </mapper>

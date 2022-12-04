@@ -31,4 +31,14 @@ public class CarParkInformations {
     public boolean isEmpty() {
         return values.isEmpty();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CarParkInformations carParkInformations = (CarParkInformations) o;
+
+        return Objects.equals(values, carParkInformations.values);
+    }
 }

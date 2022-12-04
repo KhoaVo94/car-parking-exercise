@@ -5,5 +5,6 @@ CREATE TABLE `carparking`.`carpark_info` (
     `address` VARCHAR(200) NOT NULL,
     `latitude` DOUBLE NOT NULL,
     `longitude` DOUBLE NOT NULL,
+    `updated_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`car_park_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

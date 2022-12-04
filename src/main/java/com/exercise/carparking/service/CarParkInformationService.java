@@ -6,6 +6,8 @@ import com.exercise.carparking.domain.CarParkInformation;
 import com.exercise.carparking.domain.CarParkInformations;
 import com.exercise.carparking.domain.Pageable;
 import com.exercise.carparking.domain.viewmodel.information.CarParkInformationResponse;
+import com.exercise.carparking.transaction.GeneralTransactionExecutor;
+import com.exercise.carparking.transaction.TransactionExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,16 +25,22 @@ public class CarParkInformationService {
     CarParkInformationCommandRepository carParkInformationCommandRepository;
     WebClient carParkInformationWebClient;
 
+    TransactionExecutor transactionExecutor;
+
     @Value("${carpark.info.resource}")
     String carParkInfoResource;
+
+    private CarParkInformationService() {}
 
     @Autowired
     public CarParkInformationService(CarParkInformationQueryRepository carParkInformationQueryRepository,
                                      CarParkInformationCommandRepository carParkInformationCommandRepository,
-                                     WebClient carParkInformationWebClient) {
+                                     WebClient carParkInformationWebClient,
+                                     TransactionExecutor transactionExecutor) {
         this.carParkInformationCommandRepository = carParkInformationCommandRepository;
         this.carParkInformationQueryRepository = carParkInformationQueryRepository;
         this.carParkInformationWebClient = carParkInformationWebClient;
+        this.transactionExecutor = transactionExecutor;
     }
 
     public CarParkInformations findAll() {
@@ -43,8 +51,9 @@ public class CarParkInformationService {
         return carParkInformationQueryRepository.findBy(carParkNo);
     }
 
-    public Mono<CarParkInformationResponse> updateWithLatestData() {
-        Pageable pageable = new Pageable(1, 2000);
+    @Transactional
+    public Mono<CarParkInformationResponse> updateWithLatestData(int bufferRecordSize) {
+        Pageable pageable = new Pageable(1, bufferRecordSize);
         CarParkInformations carParkInformations = CarParkInformations.ofEmpty();
         return streamNext(pageable, carParkInformations);
     }
@@ -68,7 +77,8 @@ public class CarParkInformationService {
                         return streamNext(pageable, carParkInformations);
                     }
 
-                    update(carParkInformations);
+                    transactionExecutor.execute(() -> update(carParkInformations));
+
                     return Mono.just(CarParkInformationResponse.from(carParkInformations));
                 });
     }
@@ -77,5 +87,10 @@ public class CarParkInformationService {
     public void update(CarParkInformations carParkInformations) {
         carParkInformationCommandRepository.clear();
         carParkInformationCommandRepository.register(carParkInformations);
+    }
+
+    @Transactional
+    public void clear() {
+        carParkInformationCommandRepository.clear();
     }
 }

@@ -19,7 +19,6 @@
             lot_type
         FROM carparking.carpark_availability
             JOIN carparking.carpark_info USING (car_park_no)
-        WHERE available_lots > 0
     </select>
 
     <select id="findBy" resultMap="CarParkAvailability">
@@ -51,7 +50,7 @@
         FROM carparking.carpark_availability
                  JOIN carparking.carpark_info USING (car_park_no)
         WHERE available_lots > 0
-        ORDER BY POWER(POWER(longitude - #{longitude}, 2) + POWER(latitude - #{latitude}, 2), 1/2)
+        ORDER BY 2 * ASIN(SQRT(POWER(SIN((latitude - #{latitude}) / 2), 2) + COS(#{latitude}) * COS(latitude) * POWER(SIN((longitude - #{longitude}) / 2), 2))) * 6371
         <if test="pageable.pageSize >= 0">
             LIMIT #{pageable.pageSize}
         </if>

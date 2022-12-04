@@ -1,7 +1,6 @@
 package com.exercise.carparking.controller;
 
 import com.exercise.carparking.domain.CarParkAvailabilities;
-import com.exercise.carparking.domain.CarParkInformations;
 import com.exercise.carparking.domain.Pageable;
 import com.exercise.carparking.domain.viewmodel.availability.CarParkAvailabilityItems;
 import com.exercise.carparking.domain.viewmodel.availability.CarParkAvailabilityResponse;
@@ -31,7 +30,7 @@ public class CarParkingController {
 
     @RequestMapping(value = "/information/update", method = RequestMethod.PATCH)
     public Mono<CarParkInformationResponse> updateInformation() {
-        return carParkInformationService.updateWithLatestData();
+        return carParkInformationService.updateWithLatestData(2000);
     }
 
     @RequestMapping(value = "/availability/update", method = RequestMethod.PATCH)

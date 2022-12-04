@@ -1,7 +1,5 @@
 package com.exercise.carparking.scheduler;
 
-import com.exercise.carparking.domain.CarParkAvailabilities;
-import com.exercise.carparking.domain.CarParkInformations;
 import com.exercise.carparking.service.CarParkAvailabilityService;
 import com.exercise.carparking.service.CarParkInformationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +27,6 @@ public class ScheduledTask {
 
     @Scheduled(cron = "0 0 4 */1 * *")
     public void updateCarParkingInformation() {
-        carParkInformationService.updateWithLatestData().block();
+        carParkInformationService.updateWithLatestData(2000).block();
     }
 }

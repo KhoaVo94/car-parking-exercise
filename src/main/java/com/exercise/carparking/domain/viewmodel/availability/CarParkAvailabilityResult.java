@@ -18,6 +18,9 @@ public class CarParkAvailabilityResult {
     @JsonProperty("longitude")
     Double longitude;
 
+    @JsonProperty("lot_type")
+    String lotType;
+
     @JsonProperty("total_lots")
     Integer totalLots;
 

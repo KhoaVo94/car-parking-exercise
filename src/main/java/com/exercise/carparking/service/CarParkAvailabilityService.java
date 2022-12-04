@@ -21,6 +21,8 @@ public class CarParkAvailabilityService {
 
     WebClient carParkAvailabilityWebClient;
 
+    private CarParkAvailabilityService() {}
+
     @Autowired
     public CarParkAvailabilityService(CarParkAvailabilityCommandRepository carParkAvailabilityCommandRepository,
                                       CarPArkAvailabilityQueryRepository carPArkAvailabilityQueryRepository,
