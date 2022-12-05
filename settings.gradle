@@ -1,1 +1,3 @@
 rootProject.name = 'carparking'
+include 'carparking-api'
+include 'worker'

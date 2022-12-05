@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.exercise.carparking.carparkingapi.mapper.CarParkAvailabilityMapper">
+    <resultMap id="CarParkAvailability" type="com.exercise.carparking.carparkingapi.domain.CarParkAvailability">
+        <result property="totalLots" column="total_lots"/>
+        <result property="availableLots" column="available_lots"/>
+        <result property="lotType" column="lot_type"/>
+        <association property="carParkInformation" resultMap="com.exercise.carparking.carparkingapi.mapper.CarParkInformationMapper.carParkInformation"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="CarParkAvailability">
+        SELECT
+            carpark_info.car_park_no,
+            address,
+            latitude,
+            longitude,
+            total_lots,
+            available_lots,
+            lot_type
+        FROM carparking.carpark_availability
+            JOIN carparking.carpark_info USING (car_park_no)
+    </select>
+
+    <select id="findBy" resultMap="CarParkAvailability">
+        SELECT
+            carpark_info.car_park_no,
+            address,
+            latitude,
+            longitude,
+            total_lots,
+            available_lots,
+            lot_type
+        FROM carparking.carpark_availability
+            JOIN carparking.carpark_info USING (car_park_no)
+        WHERE car_park_no = #{carParkNo}
+            AND lot_type = #{lotType}
+            AND available_lots > 0
+    </select>
+
+    <select id="findByCoordinate" resultMap="CarParkAvailability">
+        <bind name="offset" value="pageable.getOffset()"/>
+        SELECT
+            carpark_info.car_park_no,
+            address,
+            latitude,
+            longitude,
+            total_lots,
+            available_lots,
+            lot_type
+        FROM carparking.carpark_availability
+                 JOIN carparking.carpark_info USING (car_park_no)
+        WHERE available_lots > 0
+        ORDER BY 2 * ASIN(SQRT(POWER(SIN((latitude - #{latitude}) / 2), 2) + COS(#{latitude}) * COS(latitude) * POWER(SIN((longitude - #{longitude}) / 2), 2))) * 6371
+        <if test="pageable.pageSize >= 0">
+            LIMIT #{pageable.pageSize}
+        </if>
+        <if test="offset >= 0">
+            OFFSET #{offset}
+        </if>
+    </select>
+
+    <insert id="register">
+        INSERT INTO carparking.carpark_availability (car_park_no, total_lots, available_lots, lot_type)
+        VALUES
+        <foreach collection="carParkAvailabilities.values" open="(" item="availability" close=")" separator="),(">
+            #{availability.carParkInformation.carParkNo},#{availability.totalLots},#{availability.availableLots},#{availability.lotType}
+        </foreach>
+        ON DUPLICATE KEY UPDATE total_lots = VALUES(total_lots), available_lots = VALUES(available_lots)
+    </insert>
+
+    <delete id="deleteIfParkNotExist">
+        DELETE FROM carparking.carpark_availability a
+        WHERE NOT EXISTS (
+            SELECT car_park_no
+            FROM carparking.carpark_info b
+            WHERE a.car_park_no = b.car_park_no
+        )
+    </delete>
+</mapper>

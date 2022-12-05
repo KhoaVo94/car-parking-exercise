@@ -1,0 +1,10 @@
+jar {
+	baseName 'carparking-api'
+	version '0.0.1'
+}
+
+bootRun {
+	if (project.hasProperty('args')) {
+		args project.args.split('\\s+')
+	}
+}
