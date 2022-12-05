@@ -1,0 +1,23 @@
+version: "3.3"
+
+services:
+  carparking-api:
+    container_name: carpark_api
+    image: carpark/carpark_api:0.0.1
+    build: docker/production/carparking-api
+    stdin_open: true
+    tty: true
+    ports:
+      - "8080:8080"
+    expose:
+      - 8080
+  worker:
+    container_name: worker
+    image: carpark/worker:0.0.1
+    build: docker/production/worker
+    stdin_open: true
+    tty: true
+    ports:
+      - "8083:8083"
+    expose:
+      - 8083
