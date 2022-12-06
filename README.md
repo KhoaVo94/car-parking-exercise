@@ -4,6 +4,10 @@ An simple API-provided application for checking car parking available in Singapo
 # Features
 - Find nearest available carparking lots
 - Periodically update latest car parking availability (around every minute) and car parking information (4AM at every day).
+- Main APIs:
+ 1. Update car parking information: PATH `<host>/v1/carparks/information/update`
+ 2. Update car parking availability: PATH `<host>/v1/carparks/availability/update`
+ 3. Get nearest car park availability with coordination: GET <host>/v1/carparks/nearest?lattitude=<>&longitude=<>&page=<>&per_page=<>
 
 # Approching
 - Use `SpringBoot` for initialize Spring project.
