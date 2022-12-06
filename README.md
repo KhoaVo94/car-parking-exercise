@@ -20,6 +20,9 @@ In order to get car parking information, instead of download static data with CS
 
 # Project build and deploy Guideline
 ## Build and deploy with Docker container
+
+### Note: This project use `Java 17` for development.
+
 ### 1. Setup MySql DB server
 You can start your own MySql DB server (container in Docker Hub, cloud/server domain, install local,...), and version should be equals or larger than `8.0.0`
 There are properties in source code that need to be modified as you need:
