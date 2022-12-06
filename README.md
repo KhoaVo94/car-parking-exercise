@@ -68,6 +68,12 @@ If need to start worker for scheduler tasks
 - ```./gradlew :worker:clean :worker:build```
 - ```./gradlew :worker:bootRun```
 
+Or you can build all projects at once and start each one as needed
+
+- ```./gradlew clean build```
+- ```./gradlew :carparking-api:bootRun```
+- ```./gradlew :worker:bootRun```
+
 # Concerns
 - Car parking availability data will have more than one records for one car car parking.
 ![Screenshot 2022-12-05 at 19 01 04](https://user-images.githubusercontent.com/16128469/205633474-341bf742-cb36-42b0-8ffd-51bed18fe945.png)

@@ -5,6 +5,14 @@ plugins {
 	id 'groovy'
 }
 
+bootJar {
+	enabled = false
+}
+
+jar {
+	enabled = true
+}
+
 repositories {
 	maven { url "https://plugins.gradle.org/m2/" }
 }
@@ -74,14 +82,6 @@ subprojects {
 	dependencyManagement {
 		imports {
 			mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
-		}
-	}
-
-	sourceSets {
-		main {
-			java {
-				srcDir 'src/main/java'
-			}
 		}
 	}
 
