@@ -20,7 +20,7 @@ import org.springframework.core.io.support.ResourcePatternUtils;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = "com.exercise.carparking.mapper")
+@MapperScan(basePackages = "ccom.exercise.carparking.carparkingapi.mapper")
 public class MyBatisConfig {
     @Primary
     @Bean(name="registerDataSource")
